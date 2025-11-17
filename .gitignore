@@ -39,3 +39,8 @@
 
 # debug information files
 *.dwo
+
+# project files
+.vscode/
+build/
+test.rae
