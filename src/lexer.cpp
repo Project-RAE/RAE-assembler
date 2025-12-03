@@ -33,11 +33,8 @@ Token Lexer::identifierOrRegister() {
         "AX","BX","CX","DX","SI","DI","SP","BP"
     };
 
-    for (auto &r : regs) if (up == r) return { TokenType::REGISTER, up };
-
-    // if followed by ':' it's a label - but lexer doesn't know next char; parser will handle label detection,
-    // but we can return IDENTIFIER and parser will expect COLON token after it.
-    return { TokenType::IDENTIFIER, up };
+    for (auto &r : regs) if (up == r) return { Token::Type::IDENT, up };
+    return { Token::Type::IDENT, up };
 }
 
 Token Lexer::numberToken() {
@@ -50,31 +47,30 @@ Token Lexer::numberToken() {
     } else {
         while (std::isdigit((unsigned char)peek())) s += get();
     }
-    return { TokenType::NUMBER, s };
+    return { Token::Type::NUMBER, s };
 }
 
 Token Lexer::nextToken() {
-    if (pos >= src.size()) return { TokenType::END_OF_FILE, "" };
+    if (pos >= src.size()) return { Token::Type::END, "" };
     skipSpaces();
     char c = peek();
-    if (c=='\0') return { TokenType::END_OF_FILE, "" };
-    if (c==',') { get(); return { TokenType::COMMA, "," }; }
-    if (c=='+') { get(); return { TokenType::PLUS, "+" }; }
-    if (c=='-') { get(); return { TokenType::MINUS, "-" }; }
-    if (c=='*') { get(); return { TokenType::MUL, "*" }; }
-    if (c=='[') { get(); return { TokenType::LBRACKET, "[" }; }
-    if (c==']') { get(); return { TokenType::RBRACKET, "]" }; }
-    if (c==':') { get(); return { TokenType::COLON, ":" }; }
-    if (c=='\n') { get(); return { TokenType::NEWLINE, "\n" }; }
+    if (c=='\0') return { Token::Type::END, "" };
+    if (c==',') { get(); return { Token::Type::COMMA, "," }; }
+    if (c=='+') { get(); return { Token::Type::PLUS, "+" }; }
+    if (c=='-') { get(); return { Token::Type::MINUS, "-" }; }
+    if (c=='*') { get(); return { Token::Type::MUL, "*" }; }
+    if (c=='[') { get(); return { Token::Type::LBRACKET, "[" }; }
+    if (c==']') { get(); return { Token::Type::RBRACKET, "]" }; }
+    if (c==':') { get(); return { Token::Type::COLON, ":" }; }
+    if (c=='\n') { get(); return { Token::Type::EOL, "\n" }; }
+    
     if (std::isalpha((unsigned char)c) || c=='_') {
-        // could be identifier or register
         Token t = identifierOrRegister();
-        // check if next non-space char is ':' => label
         size_t save = pos;
         skipSpaces();
         if (peek() == ':') {
-            pos = save; // restore
-            return Token{TokenType::IDENTIFIER, t.text};
+            pos = save;
+            return Token{Token::Type::IDENT, t.text};
         }
         pos = save;
         return t;
@@ -82,7 +78,6 @@ Token Lexer::nextToken() {
     if (std::isdigit((unsigned char)c)) {
         return numberToken();
     }
-    // unknown -> consume
     std::string u; u += get();
-    return { TokenType::UNKNOWN, u };
+    return { Token::Type::UNKNOWN, u };
 }

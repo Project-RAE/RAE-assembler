@@ -14,7 +14,7 @@ class InstructionEncoder {
 public:
     InstructionEncoder();
     // encode one parsed instruction (needs label address resolution externally for rel32)
-    Encoded encodeInstruction(const Instruction& instr, const std::unordered_map<std::string,uint64_t>& labelAddrs, uint64_t currentAddress);
+    Encoded encodeInstruction(const ParsedInstruction& instr, const std::unordered_map<std::string,uint64_t>& labelAddrs, uint64_t currentAddress);
 
     // helper to write little-endian
     static void writeLE(std::vector<uint8_t>& out, uint64_t value, size_t bytes);
@@ -28,12 +28,12 @@ private:
     uint8_t sib(uint8_t scale, uint8_t index, uint8_t base);
 
     // encoding helpers
-    void encodeMOV(const Instruction& instr, Encoded& out, const std::unordered_map<std::string,uint64_t>& labels, uint64_t addr);
-    void encodeADD(const Instruction& instr, Encoded& out);
-    void encodeSUB(const Instruction& instr, Encoded& out);
-    void encodeJMP(const Instruction& instr, Encoded& out, const std::unordered_map<std::string,uint64_t>& labels, uint64_t addr);
-    void encodeCMP(const Instruction& instr, Encoded& out);
-    void encodeJE(const Instruction& instr, Encoded& out, const std::unordered_map<std::string,uint64_t>& labels, uint64_t addr);
-    void encodeCALL(const Instruction& instr, Encoded& out, const std::unordered_map<std::string,uint64_t>& labels, uint64_t addr);
-    void encodeRET(const Instruction& instr, Encoded& out);
+    void encodeMOV(const ParsedInstruction& instr, Encoded& out, const std::unordered_map<std::string,uint64_t>& labels, uint64_t addr);
+    void encodeADD(const ParsedInstruction& instr, Encoded& out);
+    void encodeSUB(const ParsedInstruction& instr, Encoded& out);
+    void encodeJMP(const ParsedInstruction& instr, Encoded& out, const std::unordered_map<std::string,uint64_t>& labels, uint64_t addr);
+    void encodeCMP(const ParsedInstruction& instr, Encoded& out);
+    void encodeJE(const ParsedInstruction& instr, Encoded& out, const std::unordered_map<std::string,uint64_t>& labels, uint64_t addr);
+    void encodeCALL(const ParsedInstruction& instr, Encoded& out, const std::unordered_map<std::string,uint64_t>& labels, uint64_t addr);
+    void encodeRET(const ParsedInstruction& instr, Encoded& out);
 };

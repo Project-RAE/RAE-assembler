@@ -1,11 +1,11 @@
 #pragma once
 #include "token.hpp"
 #include "lexer.hpp"
-#include "encoder.hpp" // for Instruction struct
 #include <vector>
 #include <string>
 #include <optional>
 #include <unordered_map>
+#include <cstdint>
 
 struct ParsedOperand {
     enum Kind { REG, IMM, MEM, LABEL } kind;
@@ -17,7 +17,7 @@ struct ParsedOperand {
     int64_t disp = 0;
 };
 
-struct Instruction {
+struct ParsedInstruction {
     std::string mnemonic;
     std::vector<ParsedOperand> operands;
     std::optional<std::string> label; // if this line defines a label
@@ -27,13 +27,13 @@ struct Instruction {
 class Parser {
 public:
     explicit Parser(Lexer& lex);
-    std::vector<Instruction> parseAll();
+    std::vector<ParsedInstruction> parseAll();
 
 private:
     Lexer& lexer;
     Token cur;
     void next();
-    Instruction parseLine();
+    ParsedInstruction parseLine();
     ParsedOperand parseOperand();
     int64_t parseNumberText(const std::string& s);
 };

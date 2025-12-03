@@ -314,6 +314,12 @@ void InstructionEncoder::encodeRET(const ParsedInstruction& instr, Encoded& out)
 
 Encoded InstructionEncoder::encodeInstruction(const ParsedInstruction& instr, const std::unordered_map<std::string,uint64_t>& labels, uint64_t currentAddress) {
     Encoded e;
+    
+    // If mnemonic is empty (e.g., label-only line), return empty encoding
+    if (instr.mnemonic.empty()) {
+        return e;
+    }
+    
     std::string m = instr.mnemonic;
     if (m=="MOV") encodeMOV(instr, e, labels, currentAddress);
     else if (m=="ADD") encodeADD(instr, e);
