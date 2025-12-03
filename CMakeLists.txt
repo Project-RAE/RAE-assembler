@@ -1,14 +1,5 @@
-cmake_minimum_required(VERSION 3.16)
-project(Assembler CXX)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-include_directories(${CMAKE_SOURCE_DIR}/include)
-# Source files
-add_executable(Assembler
-    src/main.cpp
-    src/lexer.cpp
-    src/parser.cpp
-    src/instruction_encoding.cpp
-)
+cmake_minimum_required(VERSION 3.10)
+project(RAEAssembler)
+set(CMAKE_CXX_STANDARD 17)
+include_directories(include)
+add_executable(rae src/main.cpp src/lexer.cpp src/parser.cpp src/encoder.cpp)

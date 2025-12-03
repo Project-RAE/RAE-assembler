@@ -1,6 +1,7 @@
 #pragma once
-#include <string>
 #include "token.hpp"
+#include <string>
+#include <vector>
 
 class Lexer {
 public:
@@ -8,10 +9,12 @@ public:
     Token nextToken();
 
 private:
-    std::string source;
+    std::string src;
     size_t pos = 0;
 
     char peek() const;
     char get();
-    void skipWhitespace();
+    void skipSpaces();
+    Token identifierOrRegister();
+    Token numberToken();
 };
